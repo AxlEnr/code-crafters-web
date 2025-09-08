@@ -1,4 +1,4 @@
-import { motion } from "framer-motion";
+import { motion, px } from "framer-motion";
 
 export default function HomeComponent() {
   return (
@@ -23,6 +23,7 @@ export default function HomeComponent() {
         <p className="mt-6 text-xl md:text-2xl text-gray-200 leading-relaxed">
           Soluciones eficientes con aplicaciones escalables multiplataforma!
         </p>
+
         <motion.button 
         whileHover={{ scale: 1.05 }}
         transition={{ type: "spring", stiffness: 200 }}
@@ -31,6 +32,9 @@ export default function HomeComponent() {
             Conoce más
           </span>
         </motion.button>
+      </div>
+      <div className="relative centered-content">
+        <img src="./public/assets/logoneon.png" alt="Logo" className=""/>
       </div>
     </motion.div>
   );

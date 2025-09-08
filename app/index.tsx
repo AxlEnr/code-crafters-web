@@ -2,6 +2,7 @@ import AboutUsComponent from "./components/about_us/about_us";
 import FooterComponent from "./components/home/footer";
 import HomeComponent from "./components/home/home";
 import NavbarComponent from "./components/navbar";
+import ProjectsComponent from "./components/projects/projects";
 import ServicesComponent from "./components/services/services";
 
 
@@ -13,6 +14,8 @@ export function Index (){
                 <HomeComponent />
                 <AboutUsComponent />
                 <ServicesComponent />
+                <ProjectsComponent />
+
             </main>       
             <footer className="items-center justify-center align-middle">
                 <FooterComponent />    
