@@ -17,8 +17,8 @@ export default function NavbarComponent() {
       <div className="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
 
         <div className="flex items-center gap-2 text-white font-bold text-xl">
-          <Code2 className="w-7 h-7" />
-          Code Crafters
+          <img src="./public/assets/logo1.png" alt="Logo" className="h-8"/>
+          <img src="./public/assets/logo2.png" alt="Logo" className="h-8"/>
         </div>
 
         <ul className="hidden md:flex gap-8 text-white font-medium">
