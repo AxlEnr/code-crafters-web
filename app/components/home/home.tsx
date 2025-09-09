@@ -4,6 +4,7 @@ export default function HomeComponent() {
   return (
     <motion.div 
     initial={{ opacity: 0, y: 80 }}
+    id="home"
     whileInView={{ opacity: 1, y: 0 }}
     transition={{
     duration: 1,

@@ -55,6 +55,7 @@ const card_services = [
 export default function ServicesComponent() {
   return (
     <motion.div
+    id="services"
       initial={{ opacity: 0, y: 80 }}
       whileInView={{ opacity: 1, y: 0 }}
       transition={{

@@ -1,25 +1,32 @@
+import React, { useState } from "react";
 import AboutUsComponent from "./components/about_us/about_us";
 import FooterComponent from "./components/home/footer";
 import HomeComponent from "./components/home/home";
 import NavbarComponent from "./components/navbar";
-import ProjectsComponent from "./components/projects/projects";
+import Projects from "./components/projects/projects";
 import ServicesComponent from "./components/services/services";
 
+type Section = "home" | "about" | "services" | "projects" | "contact";
 
-export function Index (){
-    return (
-        <body>
-            <main className="flex-col items-center justify-center align-middle">
-                <NavbarComponent />
-                <HomeComponent />
-                <AboutUsComponent />
-                <ServicesComponent />
-                <ProjectsComponent />
+export function Index() {
+  const [active, setActive] = useState<Section>("home");
 
-            </main>       
-            <footer className="items-center justify-center align-middle">
-                <FooterComponent />    
-            </footer>     
-        </body>
-    );
+  return (
+    <>
+    <body className="overflow-x-hidden">
+        <NavbarComponent active={active} onNavigate={setActive} />
+
+      <main className="flex-col items-center justify-center">
+        {active === "home" && <HomeComponent />}
+        {active === "about" && <AboutUsComponent />}
+        {active === "services" && <ServicesComponent />}
+        {active === "projects" && <Projects />}
+      </main>
+
+      <footer className="text-center items-center">
+        <FooterComponent />
+      </footer>
+    </body>
+    </>
+  );
 }
