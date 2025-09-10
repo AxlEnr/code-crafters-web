@@ -13,17 +13,17 @@ export function Index() {
 
   return (
     <>
-    <body className="overflow-x-hidden">
+    <body className="overflow-x-hidden min-h-screen">
         <NavbarComponent active={active} onNavigate={setActive} />
 
-      <main className="flex-col items-center justify-center">
+      <main className="flex-grow items-center justify-center">
         {active === "home" && <HomeComponent />}
         {active === "about" && <AboutUsComponent />}
         {active === "services" && <ServicesComponent />}
         {active === "projects" && <Projects />}
       </main>
 
-      <footer className="text-center items-center">
+      <footer className="text-center items-center flex-shrink-0">
         <FooterComponent />
       </footer>
     </body>
