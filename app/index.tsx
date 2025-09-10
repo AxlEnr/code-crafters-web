@@ -5,6 +5,7 @@ import HomeComponent from "./components/home/home";
 import NavbarComponent from "./components/navbar";
 import Projects from "./components/projects/projects";
 import ServicesComponent from "./components/services/services";
+import ContactPage from "./components/contact/contact";
 
 type Section = "home" | "about" | "services" | "projects" | "contact";
 
@@ -21,6 +22,7 @@ export function Index() {
         {active === "about" && <AboutUsComponent />}
         {active === "services" && <ServicesComponent />}
         {active === "projects" && <Projects />}
+        {active === "contact" && <ContactPage />}
       </main>
 
       <footer className="text-center items-center flex-shrink-0">

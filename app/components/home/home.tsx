@@ -17,7 +17,7 @@ export default function HomeComponent() {
         alt="Imagen"
         className="absolute inset-0 w-full h-full object-cover opacity-80 blur-xs"
       />
-      <div className="relative z-10 max-w-2xl px-8 text-left">
+      <div className="relative z-10 max-w-5xl px-8 text-left">
         <h2 className="text-5xl md:text-6xl font-extrabold text-white drop-shadow-lg hover:text-blue-700">
           Code Crafters
         </h2>
