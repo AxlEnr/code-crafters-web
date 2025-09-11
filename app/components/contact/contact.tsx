@@ -1,47 +1,89 @@
-import React, { useState, useMemo } from "react";
-import { motion, px } from "framer-motion";
-
-import { FaEnvelope, FaPhoneAlt, FaMapMarkerAlt, FaLinkedin, FaGithub, FaFacebook } from 'react-icons/fa';
+import React from "react";
+import { motion } from "framer-motion";
+import Magnet  from '../pixel/magnet';
+import { FaEnvelope, FaPhoneAlt, FaMapMarkerAlt, FaGithub, FaFacebook } from "react-icons/fa";
 
 const ContactPage = () => {
-    return (
-        <>
-            <div className="bg-gradient-to-b from-slate-950 via-slate-900 to-slate-800 flex flex-col justify-center items-center h-lvh px-4 text-center ">
-                <h2 className="text-4xl md:text-5xl font-extrabold bg-gradient-to-r from-indigo-400 via-cyan-400 to-purple-400 bg-clip-text text-transparent drop-shadow-lg">
-                Contáctanos
-                </h2>
-                <div className="w-24 h-1.5 mb-5 bg-gradient-to-r from-indigo-500 to-cyan-400 mx-auto mt-3 rounded-full"></div>
-                <p className="text-primary max-w-xl mb-10">Estamos disponibles para dudas, cotizaciones o cualquier consulta que deseen realizar:</p>
-                
-                <div className="space-y-4 text-lg text-gray-700">
-                    <div className="flex items-center justify-center gap-3">
-                        <FaEnvelope className="text-secondary" />
-                        <span style={{ color: 'white' }}>aacodecrafters@gmail.com</span>
-                    </div>
-                    <div className="flex items-center justify-center gap-3">
-                        <FaPhoneAlt className="text-secondary" />
-                        <span style={{ color: 'white' }}>+52 775 111 1111</span>
-                    </div>
-                    <div className="flex items-center justify-center gap-3">
-                        <FaMapMarkerAlt className="text-secondary" />
-                        <span style={{ color: 'white' }}> Tulancingo Hidalgo, México</span>
-                    </div>
-                </div>
+  const contactInfo = [
+    { icon: <FaEnvelope />, text: "aacodecrafters@gmail.com" },
+    { icon: <FaPhoneAlt />, text: "+52 775 111 1111" },
+    { icon: <FaMapMarkerAlt />, text: "Tulancingo Hidalgo, México" },
+  ];
 
-                <div className="flex items-center justify-center gap-6 mt-10 text-2xl text-secondary">
-    
-                    <a href="https://github.com/" target="_blank" rel="noopener noreferrer">
-                        <FaGithub className="hover:text-secondary/80 transition" />
-                    </a>
+  const socialLinks = [
+    { icon: <FaGithub />, url: "https://github.com/", label: "GitHub" },
+    { icon: <FaFacebook />, url: "https://facebook.com/", label: "Facebook" },
+  ];
 
-                    <a href="https://github.com/" target="_blank" rel="noopener noreferrer">
-                        <FaFacebook className="hover:text-secondary/80 transition" />
-                    </a>
+  return (
+    <div className="bg-gradient-to-b from-slate-950 via-slate-900 to-slate-800 flex flex-col justify-center items-center min-h-screen px-6 text-center py-16">
+      {/* Título */}
+      <motion.h2
+        initial={{ y: -30, opacity: 0 }}
+        animate={{ y: 0, opacity: 1 }}
+        transition={{ duration: 0.8 }}
+        className="text-4xl md:text-5xl font-extrabold bg-gradient-to-r from-indigo-400 via-cyan-400 to-purple-400 bg-clip-text text-transparent drop-shadow-lg"
+      >
+        Contáctanos
+      </motion.h2>
 
-                </div>
-            </div>
-        </>
-    );
+      <div className="w-24 h-1.5 mb-5 bg-gradient-to-r from-indigo-500 to-cyan-400 mx-auto mt-3 rounded-full"></div>
+
+      <motion.p
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 0.3, duration: 0.8 }}
+        className="text-primary max-w-xl mb-10 text-white"
+      >
+        ¿Tienes una idea, proyecto o duda? ¡Estamos aquí para ayudarte! 
+            Envíanos un mensaje y te responderemos lo antes posible.
+
+      </motion.p>
+
+      {/* Información de contacto */}
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 0.5, duration: 0.8 }}
+        className="space-y-4 text-lg text-white"
+      >
+        {contactInfo.map((item, index) => (
+          <div
+            key={index}
+            className="flex items-center justify-center gap-3 hover:text-cyan-400 transition-colors cursor-pointer"
+          >
+            <span className="text-secondary">{item.icon}</span>
+            <span>{item.text}</span>
+          </div>
+        ))}
+      </motion.div>
+
+      <Magnet padding={50} disabled={false} magnetStrength={10}>
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 0.7, duration: 0.8 }}
+        className="flex items-center justify-center gap-6 mt-10"
+      >
+        {socialLinks.map((link, index) => (
+          <a
+            key={index}
+            href={link.url}
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label={link.label}
+            className="p-3 rounded-full bg-gray-800 hover:bg-secondary transition-colors text-2xl flex items-center justify-center"
+          >
+            {link.icon}
+          </a>
+        ))}
+      </motion.div>
+      </Magnet>
+
+      {/* Redes sociales */}
+      
+    </div>
+  );
 };
 
 export default ContactPage;

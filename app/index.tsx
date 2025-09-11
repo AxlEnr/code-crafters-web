@@ -12,23 +12,39 @@ type Section = "home" | "about" | "services" | "projects" | "contact";
 export function Index() {
   const [active, setActive] = useState<Section>("home");
 
+  const handleNavigate = (section: Section) => {
+    setActive(section);
+    const el = document.getElementById(section);
+    if (el) {
+      el.scrollIntoView({ behavior: "smooth" });
+    }
+  };
+
   return (
-    <>
-    <body className="overflow-x-hidden min-h-screen">
-        <NavbarComponent active={active} onNavigate={setActive} />
+    <div className="overflow-x-hidden min-h-screen">
+      <NavbarComponent active={active} onNavigate={handleNavigate} />
 
       <main className="flex-grow items-center justify-center">
-        {active === "home" && <HomeComponent />}
-        {active === "about" && <AboutUsComponent />}
-        {active === "services" && <ServicesComponent />}
-        {active === "projects" && <Projects />}
-        {active === "contact" && <ContactPage />}
+        <section id="home">
+          <HomeComponent />
+        </section>
+        <section id="about">
+          <AboutUsComponent />
+        </section>
+        <section id="services">
+          <ServicesComponent />
+        </section>
+        <section id="projects">
+          <Projects />
+        </section>
+        <section id="contact">
+          <ContactPage />
+        </section>
       </main>
 
       <footer className="text-center items-center flex-shrink-0">
         <FooterComponent />
       </footer>
-    </body>
-    </>
+    </div>
   );
 }

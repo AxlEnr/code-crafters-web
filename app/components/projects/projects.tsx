@@ -21,7 +21,7 @@ export default function Projects() {
         title: "M.I.A.U",
         content:
           "Red social enfocada en la búsqueda y adopción responsable de mascotas. Conecta a rescatistas, albergues y personas que buscan un nuevo integrante para su familia.",
-        src: "/assets/projects/miau.jpg",
+        src: "/assets/projects/miau.png",
         alt: "Imagen de la app",
         actionButton: "Descargar APK",
         actionHref: "/descargas/miau.apk",
@@ -48,7 +48,7 @@ export default function Projects() {
         title: "CrowPI Assistant",
         content:
           "Asistente virtual desarrollado para la CrowPI. Un proyecto educativo que facilita la exploración de este dispositivo y potencia el aprendizaje interactivo.",
-        src: "/assets/projects/crowpi.jpg",
+        src: "/assets/projects/gama.png",
         alt: "Imagen del proyecto",
       },
       {
