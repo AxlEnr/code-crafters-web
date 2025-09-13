@@ -6,7 +6,8 @@ import { FaEnvelope, FaPhoneAlt, FaMapMarkerAlt, FaGithub, FaFacebook } from "re
 const ContactPage = () => {
   const contactInfo = [
     { icon: <FaEnvelope />, text: "aacodecrafters@gmail.com" },
-    { icon: <FaPhoneAlt />, text: "+52 775 111 1111" },
+    { icon: <FaPhoneAlt />, text: "+52 775 758 0699" },
+    { icon: <FaPhoneAlt />, text: "+52 775 258 6934" },
     { icon: <FaMapMarkerAlt />, text: "Tulancingo Hidalgo, México" },
   ];
 
