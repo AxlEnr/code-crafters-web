@@ -40,12 +40,18 @@ export default function HomeComponent() {
       </div>
 
       {/* Logo centrado con Magnet */}
-      <div className="relative z-20 flex items-center justify-center">
+      <div className="relative z-20 flex items-center justify-center px-4">
         <Magnet padding={50} disabled={false} magnetStrength={50}>
           <img
             src="/assets/logoneon.png"
             alt="Logo"
-            className="max-w-[800px] h-auto mx-auto"
+            className="
+              w-[250px]   /* tamaño en móviles */
+              sm:w-[400px] /* tablets */
+              md:w-[600px] /* pantallas medianas */
+              lg:w-[800px] /* pantallas grandes */
+              h-auto mx-auto
+            "
           />
         </Magnet>
       </div>
