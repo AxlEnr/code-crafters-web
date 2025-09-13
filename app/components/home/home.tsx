@@ -1,9 +1,19 @@
 import { motion } from "framer-motion";
 import PixelBlast from "../pixel/pixelblast";
 import Magnet from "../pixel/magnet";
-import FaultyTerminal from "../pixel/retro";
+import { useEffect, useState } from "react";
 
 export default function HomeComponent() {
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    // Detecta si la pantalla es menor a 768px
+    const checkMobile = () => setIsMobile(window.innerWidth < 768);
+    checkMobile();
+    window.addEventListener("resize", checkMobile);
+    return () => window.removeEventListener("resize", checkMobile);
+  }, []);
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 80 }}
@@ -16,40 +26,43 @@ export default function HomeComponent() {
       viewport={{ once: true }}
       className="relative w-full h-screen flex items-center justify-center bg-black"
     >
-      {/* Fondo de PixelBlast */}
-      <div className="absolute inset-0 z-10 pointer-events-none">
-        <PixelBlast
-          variant="circle"
-          pixelSize={6}
-          color="#5DE2E7"
-          patternScale={3}
-          patternDensity={1.2}
-          pixelSizeJitter={0.5}
-          enableRipples
-          rippleSpeed={0.4}
-          rippleThickness={0.12}
-          rippleIntensityScale={1.5}
-          liquid
-          liquidStrength={0.12}
-          liquidRadius={1.2}
-          liquidWobbleSpeed={5}
-          speed={0.6}
-          edgeFade={0.25}
-          transparent
-        />
-      </div>
+      {/* Fondo dinámico: PixelBlast solo en desktop */}
+      {!isMobile && (
+        <div className="absolute inset-0 z-10 pointer-events-none">
+          <PixelBlast
+            variant="circle"
+            pixelSize={6}
+            color="#5DE2E7"
+            patternScale={3}
+            patternDensity={1.2}
+            pixelSizeJitter={0.5}
+            enableRipples
+            rippleSpeed={0.4}
+            rippleThickness={0.12}
+            rippleIntensityScale={1.5}
+            liquid
+            liquidStrength={0.12}
+            liquidRadius={1.2}
+            liquidWobbleSpeed={5}
+            speed={0.6}
+            edgeFade={0.25}
+            transparent
+          />
+        </div>
+      )}
 
-      {/* Logo centrado con Magnet */}
+      {/* Logo centrado */}
       <div className="relative z-20 flex items-center justify-center px-4">
-        <Magnet padding={50} disabled={false} magnetStrength={50}>
+        <Magnet
+          padding={50}
+          disabled={isMobile} // Desactivar magnet en móvil
+          magnetStrength={50}
+        >
           <img
             src="/assets/logoneon.png"
             alt="Logo"
             className="
-              w-[250px]   /* tamaño en móviles */
-              sm:w-[400px] /* tablets */
-              md:w-[600px] /* pantallas medianas */
-              lg:w-[800px] /* pantallas grandes */
+              w-[200px] sm:w-[400px] md:w-[600px] lg:w-[800px]
               h-auto mx-auto
             "
           />
