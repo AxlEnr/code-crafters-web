@@ -13,7 +13,7 @@ const ContactPage = () => {
 
   const socialLinks = [
     { icon: <FaGithub />, url: "https://github.com/", label: "GitHub" },
-    { icon: <FaFacebook />, url: "https://facebook.com/", label: "Facebook" },
+    { icon: <FaFacebook />, url: "https://www.facebook.com/share/1LyNFKbDGe/", label: "Facebook" },
   ];
 
   return (
