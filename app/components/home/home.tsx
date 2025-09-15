@@ -7,7 +7,6 @@ export default function HomeComponent() {
   const [isMobile, setIsMobile] = useState(false);
 
   useEffect(() => {
-    // Detecta si la pantalla es menor a 768px
     const checkMobile = () => setIsMobile(window.innerWidth < 768);
     checkMobile();
     window.addEventListener("resize", checkMobile);
@@ -24,7 +23,19 @@ export default function HomeComponent() {
         ease: [0.16, 1, 0.3, 1],
       }}
       viewport={{ once: true }}
-      className="relative w-full h-screen flex items-center justify-center bg-black"
+      className={`relative w-full h-screen flex items-center justify-center ${
+        isMobile ? "" : "bg-black"
+      }`}
+      style={
+        isMobile
+          ? {
+              backgroundImage: "url('/assets/background.jpg')",
+              backgroundSize: "cover",
+              backgroundPosition: "center",
+              backgroundRepeat: "no-repeat",
+            }
+          : {}
+      }
     >
       {/* Fondo dinámico: PixelBlast solo en desktop */}
       {!isMobile && (
@@ -55,7 +66,7 @@ export default function HomeComponent() {
       <div className="relative z-20 flex items-center justify-center px-4">
         <Magnet
           padding={50}
-          disabled={isMobile} // Desactivar magnet en móvil
+          disabled={isMobile}
           magnetStrength={50}
         >
           <img
