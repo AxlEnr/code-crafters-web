@@ -111,7 +111,7 @@ export default function Projects() {
         open={showPortfolioModal}
         onClose={() => setShowPortfolioModal(false)}
         links={{
-          axel: "https://axlenr.github.io/portfolioaxel.github.io/",
+          axel: "https://portfolio-axel-garcia.vercel.app/",
           arturo: "https://portfolioarturomd7.netlify.app/",
         }}
       />
