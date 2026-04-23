@@ -37,6 +37,7 @@ export function meta({}: Route.MetaArgs) {
     { name: "description", content: "Impulsa tu presencia digital con nuestra agencia de desarrollo de software. Creamos apps multiplataforma con IA a la medida de tu negocio. ¡Contáctanos!" },
     { name: "keywords", content: "desarrollo web, aplicaciones multiplataforma, IA, software a medida, desarrollo mobile, apps, IA, software a la medida, frontend, backend" },
     { name: "author", content: "Code Crafters" },
+    { name: "google-site-verification", content: "j4AzCEHmhKRKIiGYHiJXuQpTPEuRS5iakF3XVHDeiDw" },
     { name: "robots", content: "index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" },
     { name: "theme-color", content: "#000000" },
     { name: "twitter:card", content: "summary_large_image" },
