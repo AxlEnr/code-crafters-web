@@ -1,7 +1,7 @@
 import React from "react";
 import { motion } from "framer-motion";
 import Magnet  from '../pixel/magnet';
-import { FaEnvelope, FaPhoneAlt, FaMapMarkerAlt, FaGithub, FaFacebook } from "react-icons/fa";
+import { FaEnvelope, FaPhoneAlt, FaMapMarkerAlt, FaGithub, FaTwitter } from "react-icons/fa";
 
 const ContactPage = () => {
   const contactInfo = [
@@ -12,8 +12,8 @@ const ContactPage = () => {
   ];
 
   const socialLinks = [
-    { icon: <FaGithub />, url: "https://github.com/", label: "GitHub" },
-    { icon: <FaFacebook />, url: "https://www.facebook.com/share/1LyNFKbDGe/", label: "Facebook" },
+    { icon: <FaGithub />, url: "https://github.com/AxlEnr", label: "GitHub" },
+    { icon: <FaTwitter />, url: "https://x.com/code_craft_dev", label: "Twitter" },
   ];
 
   return (
