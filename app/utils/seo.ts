@@ -31,7 +31,7 @@ export interface OpenGraphData {
 export const SEO_CONFIG = {
   siteName: "Code Crafters",
   siteUrl: "https://www.codecraftersweb.dev",
-  defaultImage: "/og_image.png",
+  defaultImage: "/assets/logos/logo-dark-full.png",
   twitterHandle: "@code_craft_dev",
   twitterCreator: "@code_craft_dev",
   githubProfiles: [
@@ -138,7 +138,7 @@ export function generateJsonLd(seo?: Partial<SEOData>): string {
         sameAs: [...SEO_CONFIG.githubProfiles, "https://x.com/code_craft_dev"],
         logo: {
           "@type": "ImageObject",
-          url: `${url}/logo.png`,
+          url: `${url}/assets/logos/logo-dark-full.png`,
         },
         contactPoint: {
           "@type": "ContactPoint",

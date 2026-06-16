@@ -20,73 +20,86 @@ export default function NavbarComponent({
   ];
 
   return (
-    <nav className="w-full z-50 bg-gradient-to-r from-blue-950 via-cyan-600 to-blue-300 shadow-lg">
-      <div className="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
-        <div className="flex items-center gap-2 text-white font-bold text-xl">
-          <img src="/assets/logo1.png" alt="Logo" className="h-8" />
-          <img src="/assets/logo2.png" alt="Logo" className="h-8" />
-        </div>
+    <nav className="fixed top-0 w-full z-50 bg-surface-0/80 backdrop-blur-xl border-b border-border">
+      <div className="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
+        <button
+          onClick={() => onNavigate("home")}
+          className="flex items-center gap-2"
+        >
+          <img
+            src="/assets/logos/logo-light-small.png"
+            alt="Code Crafters"
+            className="h-7 w-auto"
+          />
+        </button>
 
-        <ul className="hidden md:flex gap-8 text-white font-medium text-sm lg:text-lg">
+        <ul className="hidden md:flex items-center gap-8">
           {items.map((i) => (
             <li key={i.id}>
-              <a
+              <button
                 onClick={() => onNavigate(i.id)}
-                aria-current={active === i.id ? "page" : undefined}
-                className="relative group cursor-pointer"
+                className={`relative text-sm font-medium tracking-wide transition-colors duration-300 ${
+                  active === i.id
+                    ? "text-text-primary"
+                    : "text-text-muted hover:text-text-secondary"
+                }`}
               >
                 {i.label}
-                <span
-                  className={`absolute left-0 -bottom-1 h-[2px] bg-white transition-all ${
-                    active === i.id ? "w-full" : "w-0 group-hover:w-full"
-                  }`}
-                />
-              </a>
+                {active === i.id && (
+                  <span className="absolute -bottom-1.5 left-1/2 -translate-x-1/2 w-4 h-0.5 bg-accent rounded-full" />
+                )}
+              </button>
             </li>
           ))}
         </ul>
 
-        <button className="hidden lg:inline-flex px-5 py-2 rounded-lg bg-white text-blue-950 font-semibold hover:bg-gray-100 transition shadow">
-          Cotizar
-        </button>
+        <div className="hidden md:flex items-center gap-4">
+          <button
+            onClick={() => onNavigate("contact")}
+            className="px-5 py-2 text-sm font-medium tracking-wide rounded-lg bg-text-primary text-surface-0 hover:bg-text-primary/90 transition-colors duration-300"
+          >
+            Cotizar
+          </button>
+        </div>
 
         <button
           onClick={() => setOpen(!open)}
-          className="md:hidden text-white"
+          className="md:hidden text-text-secondary hover:text-text-primary transition-colors"
+          aria-label="Menu"
         >
-          {open ? <X size={28} /> : <Menu size={28} />}
+          {open ? <X size={22} /> : <Menu size={22} />}
         </button>
       </div>
 
       {open && (
-        <div className="md:hidden px-6 pb-4 backdrop-blur-sm">
-          <hr className="border-white/20 mb-3" />
-          <ul className="flex flex-col gap-4 text-white font-medium text-lg">
+        <div className="md:hidden bg-surface-0/95 backdrop-blur-xl border-b border-border">
+          <div className="px-6 py-4 flex flex-col gap-1">
             {items.map((i) => (
-              <li key={i.id}>
-                <button
-                  onClick={() => {
-                    onNavigate(i.id);
-                    setOpen(false);
-                  }}
-                  aria-current={active === i.id ? "page" : undefined}
-                  className="w-full text-left relative group"
-                >
-                  {i.label}
-                  <span
-                    className={`absolute left-0 -bottom-1 h-[2px] bg-white transition-all ${
-                      active === i.id ? "w-full" : "w-0 group-hover:w-full"
-                    }`}
-                  />
-                </button>
-              </li>
-            ))}
-            <li>
-              <button className="w-full px-5 py-2 rounded-lg bg-white text-blue-950 font-semibold hover:bg-gray-100 transition shadow">
-                Cotizar
+              <button
+                key={i.id}
+                onClick={() => {
+                  onNavigate(i.id);
+                  setOpen(false);
+                }}
+                className={`w-full text-left px-4 py-3 rounded-lg text-sm font-medium tracking-wide transition-colors ${
+                  active === i.id
+                    ? "bg-surface-2 text-text-primary"
+                    : "text-text-secondary hover:bg-surface-1 hover:text-text-primary"
+                }`}
+              >
+                {i.label}
               </button>
-            </li>
-          </ul>
+            ))}
+            <button
+              onClick={() => {
+                onNavigate("contact");
+                setOpen(false);
+              }}
+              className="mt-2 w-full px-4 py-3 rounded-lg text-sm font-medium tracking-wide bg-text-primary text-surface-0 hover:bg-text-primary/90 transition-colors"
+            >
+              Cotizar
+            </button>
+          </div>
         </div>
       )}
     </nav>

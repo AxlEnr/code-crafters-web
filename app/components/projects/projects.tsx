@@ -1,109 +1,381 @@
-import React, { useState, useMemo } from "react";
-import ProjectCard from "./project_card";
+import React, { useState, useRef, useEffect, useCallback } from "react";
 import PortfolioModal from "./portfolio_modal";
-import { motion, px } from "framer-motion";
+import * as motion from "motion/react-client";
+
+const projects = [
+  {
+    title: "Flores en Hidalgo",
+    content:
+      "Recorrido visual interactivo por la flora con propiedades maravillosas de la región de Hidalgo.",
+    src: "/assets/projects/flores.png",
+    alt: "Flores en Hidalgo",
+    actionButton: "Explorar sitio",
+    actionHref: "https://plantshidalgo.netlify.app",
+    tags: ["Web", "Interactivo"],
+  },
+  {
+    title: "M.I.A.U",
+    content:
+      "Red social para búsqueda y adopción responsable de mascotas. Conecta rescatistas y familias.",
+    src: "/assets/projects/miau.png",
+    alt: "M.I.A.U",
+    actionButton: "Descargar APK",
+    actionHref: "/descargas/miau.apk",
+    tags: ["Móvil", "Social"],
+  },
+  {
+    title: "P.A.W.S",
+    content:
+      "App móvil para fortalecer la convivencia familiar mediante recuerdos con tus mascotas.",
+    src: "/assets/projects/paws.jpg",
+    alt: "P.A.W.S",
+    actionButton: "Descargar APK",
+    actionHref: "/descargas/paws.apk",
+    tags: ["Móvil", "Familia"],
+  },
+  {
+    title: "Ciberseguridad",
+    content:
+      "Plataforma informativa con consejos prácticos y recursos para protegerse en el mundo digital.",
+    src: "/assets/projects/cibersec.png",
+    alt: "Ciberseguridad",
+    actionButton: "Visitar sitio",
+    actionHref: "https://cibersec-web.vercel.app/",
+    tags: ["Web", "Educación"],
+  },
+  {
+    title: "CrowPI Assistant",
+    content:
+      "Asistente virtual educativo para CrowPI que potencia el aprendizaje interactivo con el dispositivo.",
+    src: "/assets/projects/gama.png",
+    alt: "CrowPI Assistant",
+    tags: ["IA", "Educación"],
+  },
+  {
+    title: "Portafolios",
+    content:
+      "Muestra de portafolios digitales que reflejan creatividad, experiencia y estilo personal.",
+    src: "/assets/projects/portfolio.png",
+    alt: "Portafolios",
+    actionButton: "Explorar portafolios",
+    isPortfolio: true,
+    tags: ["Web", "Diseño"],
+  },
+];
+
+const GAP = 24;
 
 export default function Projects() {
+  const [current, setCurrent] = useState(0);
   const [showPortfolioModal, setShowPortfolioModal] = useState(false);
+  const [isHovered, setIsHovered] = useState(false);
+  const [slideWidth, setSlideWidth] = useState(0);
+  const trackRef = useRef<HTMLDivElement>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
+  const touchStartX = useRef(0);
+  const touchStartY = useRef(0);
+  const isSwiping = useRef(false);
+  const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
+  const totalSlides = projects.length;
 
-  const projects_obj = useMemo(
-    () => [
-      {
-        title: "Flores en Hidalgo",
-        content:
-          "Un recorrido visual por la flora con propiedades maravillosas ubicadas en la región de Hidalgo. Una web interactiva que muestra la riqueza natural del estado y su diversidad botánica.",
-        src: "/assets/projects/flores.png",
-        alt: "Imagen de la web",
-        actionButton: "Explorar sitio",
-        actionHref: "https://plantshidalgo.netlify.app",
-      },
-      {
-        title: "M.I.A.U",
-        content:
-          "Red social enfocada en la búsqueda y adopción responsable de mascotas. Conecta a rescatistas, albergues y personas que buscan un nuevo integrante para su familia.",
-        src: "/assets/projects/miau.png",
-        alt: "Imagen de la app",
-        actionButton: "Descargar APK",
-        actionHref: "/descargas/miau.apk",
-      },
-      {
-        title: "P.A.W.S",
-        content:
-          "Aplicación móvil diseñada para fortalecer la convivencia familiar mediante recuerdos y experiencias compartidas con las mascotas del hogar.",
-        src: "/assets/projects/paws.jpg",
-        alt: "Imagen de la app",
-        actionButton: "Descargar APK",
-        actionHref: "/descargas/paws.apk",
-      },
-      {
-        title: "Sitio web de ciberseguridad",
-        content:
-          "Una plataforma informativa que ofrece consejos prácticos y recursos para aprender a protegerse en el mundo digital y navegar con mayor seguridad.",
-        src: "/assets/projects/cibersec.png",
-        alt: "Imagen de la web",
-        actionButton: "Visitar sitio",
-        actionHref: "https://cibersec-web.vercel.app/",
-      },
-      {
-        title: "CrowPI Assistant",
-        content:
-          "Asistente virtual desarrollado para la CrowPI. Un proyecto educativo que facilita la exploración de este dispositivo y potencia el aprendizaje interactivo.",
-        src: "/assets/projects/gama.png",
-        alt: "Imagen del proyecto",
-      },
-      {
-        title: "Portafolios",
-        content:
-          "Muestra de portafolios digitales que reflejan creatividad, experiencia y estilo personal. Una ventana a distintos proyectos y enfoques de diseño.",
-        src: "/assets/projects/portfolio.png",
-        alt: "Imagen de la web",
-        actionButton: "Explorar portafolios",
-        actionHref: "#modal_portfolios", 
-      },
-    ],
-    []
-  );
+  const next = useCallback(() => {
+    setCurrent((prev) => (prev + 1) % totalSlides);
+  }, [totalSlides]);
+
+  const prev = useCallback(() => {
+    setCurrent((prev) => (prev - 1 + totalSlides) % totalSlides);
+  }, [totalSlides]);
+
+  const goTo = useCallback((index: number) => {
+    setCurrent(index);
+  }, []);
+
+  useEffect(() => {
+    const measure = () => {
+      if (trackRef.current) {
+        const first = trackRef.current.children[0] as HTMLElement | undefined;
+        if (first) {
+          setSlideWidth(first.offsetWidth);
+        }
+      }
+    };
+    measure();
+    window.addEventListener("resize", measure);
+    return () => window.removeEventListener("resize", measure);
+  }, []);
+
+  useEffect(() => {
+    if (isHovered) {
+      if (intervalRef.current) clearInterval(intervalRef.current);
+      return;
+    }
+    intervalRef.current = setInterval(next, 4000);
+    return () => {
+      if (intervalRef.current) clearInterval(intervalRef.current);
+    };
+  }, [isHovered, next]);
+
+  const translateX = slideWidth > 0 ? -(current * (slideWidth + GAP)) : 0;
+
+  const handleTouchStart = (e: React.TouchEvent) => {
+    touchStartX.current = e.touches[0].clientX;
+    touchStartY.current = e.touches[0].clientY;
+    isSwiping.current = false;
+  };
+
+  const handleTouchMove = (e: React.TouchEvent) => {
+    const dx = Math.abs(e.touches[0].clientX - touchStartX.current);
+    const dy = Math.abs(e.touches[0].clientY - touchStartY.current);
+    if (dx > 5 && dx > dy) {
+      isSwiping.current = true;
+    }
+  };
+
+  const handleTouchEnd = (e: React.TouchEvent) => {
+    if (!isSwiping.current) return;
+    const dx = e.changedTouches[0].clientX - touchStartX.current;
+    if (dx < -50) next();
+    else if (dx > 50) prev();
+  };
+
+  const handleMouseDown = (e: React.MouseEvent) => {
+    touchStartX.current = e.clientX;
+    isSwiping.current = false;
+  };
+
+  const handleMouseUp = (e: React.MouseEvent) => {
+    if (!isSwiping.current) return;
+    const dx = e.clientX - touchStartX.current;
+    if (dx < -50) next();
+    else if (dx > 50) prev();
+  };
+
+  const handleMouseMove = (e: React.MouseEvent) => {
+    if (e.buttons !== 1) return;
+    const dx = Math.abs(e.clientX - touchStartX.current);
+    if (dx > 5) isSwiping.current = true;
+  };
 
   return (
     <>
-      <motion.div 
-      id="projects"
-      initial={{ opacity: 0, y: 80 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      transition={{
-        duration: 1,
-        ease: [0.16, 1, 0.3, 1],
-      }}
-      viewport={{ once: true }}
-      className="bg-gradient-to-b from-slate-950 via-slate-900 to-slate-800 py-20 px-6 md:px-12 lg:px-24">
-        <div className="max-w-6xl mx-auto text-center">
-          <h2 className="text-4xl md:text-5xl font-extrabold bg-gradient-to-r from-indigo-400 via-cyan-400 to-purple-400 bg-clip-text text-transparent drop-shadow-lg">
-            Nuestros Proyectos
-          </h2>
-          <div className="w-24 h-1.5 mb-5 bg-gradient-to-r from-indigo-500 to-cyan-400 mx-auto mt-3 rounded-full"></div>
+      <motion.div
+        id="projects"
+        initial={{ opacity: 0, y: 60 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+        viewport={{ once: true, margin: "-100px" }}
+        className="bg-surface-0 py-24 overflow-hidden"
+      >
+        <div className="max-w-6xl mx-auto px-6 md:px-12 lg:px-24">
+          <div className="max-w-3xl mb-16">
+            <motion.p
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.1 }}
+              viewport={{ once: true }}
+              className="text-sm font-medium tracking-widest text-text-muted uppercase mb-4"
+            >
+              Proyectos
+            </motion.p>
+            <motion.h2
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.2 }}
+              viewport={{ once: true }}
+              className="text-3xl md:text-5xl font-bold tracking-tight text-text-primary"
+            >
+              Trabajos que hablan
+              <br />
+              por sí mismos.
+            </motion.h2>
+          </div>
         </div>
-        <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-8 ">
-          {projects_obj.map((p, i) => {
-            const isPortfolioCard = p.title === "Portafolios";
-            return (
-              <ProjectCard
-                key={i}
-                title={p.title}
-                content={p.content}
-                image={{ src: p.src, alt: p.alt ?? "Imagen del proyecto", width: 300 }}
-                actionButton={p.actionButton}
-                actionHref={p.actionHref}
-                onActionClick={
-                  isPortfolioCard
-                    ? (e) => {
-                        e.preventDefault(); 
-                        setShowPortfolioModal(true);
-                      }
-                    : undefined
-                }
-              />
-            );
-          })}
+
+        <div
+          ref={containerRef}
+          className="relative select-none"
+          onMouseEnter={() => setIsHovered(true)}
+          onMouseLeave={() => setIsHovered(false)}
+          onMouseDown={handleMouseDown}
+          onMouseUp={handleMouseUp}
+          onMouseMove={handleMouseMove}
+          onTouchStart={handleTouchStart}
+          onTouchMove={handleTouchMove}
+          onTouchEnd={handleTouchEnd}
+        >
+          <div className="max-w-[1400px] mx-auto px-4 md:px-8 overflow-hidden">
+            <motion.div
+              ref={trackRef}
+              className="flex"
+              style={{ gap: GAP }}
+              animate={{ x: translateX }}
+              transition={{
+                type: "spring",
+                stiffness: 300,
+                damping: 30,
+              }}
+            >
+              {projects.map((p, i) => {
+                const isActive = i === current;
+                const distance = Math.abs(i - current);
+                const opacity = distance <= 1 ? 1 : 0.3;
+
+                return (
+                  <motion.div
+                    key={i}
+                    className="relative flex-shrink-0 w-[85vw] md:w-[420px] lg:w-[480px]"
+                    animate={{
+                      scale: isActive ? 1 : 0.92,
+                      opacity,
+                      filter: isActive
+                        ? "brightness(1)"
+                        : "brightness(0.6)",
+                    }}
+                    transition={{
+                      duration: 0.6,
+                      ease: [0.16, 1, 0.3, 1],
+                    }}
+                  >
+                    <div
+                      className={[
+                        "relative overflow-hidden rounded-2xl bg-surface-2 border transition-all duration-500",
+                        isActive
+                          ? "border-border-light shadow-2xl shadow-black/40"
+                          : "border-border",
+                      ].join(" ")}
+                    >
+                      <div className="aspect-[16/10] w-full overflow-hidden">
+                        <img
+                          src={p.src}
+                          alt={p.alt}
+                          loading="lazy"
+                          draggable={false}
+                          className="h-full w-full object-cover transition-transform duration-700 ease-out"
+                          style={{
+                            transform: isActive
+                              ? "scale(1)"
+                              : "scale(1.08)",
+                          }}
+                        />
+                        <div className="absolute inset-0 bg-gradient-to-t from-surface-0 via-surface-0/20 to-transparent" />
+                      </div>
+
+                      <div className="absolute bottom-0 left-0 right-0 p-5 md:p-6">
+                        <div className="flex items-center gap-2 mb-3">
+                          {p.tags?.map((tag) => (
+                            <span
+                              key={tag}
+                              className="px-2.5 py-0.5 rounded-full text-[10px] font-medium tracking-wide uppercase bg-surface-1/80 backdrop-blur-sm border border-border text-text-secondary"
+                            >
+                              {tag}
+                            </span>
+                          ))}
+                        </div>
+
+                        <h3 className="text-xl md:text-2xl font-bold tracking-tight text-text-primary">
+                          {p.title}
+                        </h3>
+                        <p className="mt-2 text-sm leading-relaxed text-text-secondary line-clamp-2">
+                          {p.content}
+                        </p>
+
+                        {p.actionButton && (
+                          <div className="mt-4">
+                            {p.isPortfolio ? (
+                              <button
+                                type="button"
+                                onClick={(e) => {
+                                  e.preventDefault();
+                                  setShowPortfolioModal(true);
+                                }}
+                                className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-text-primary text-surface-0 text-sm font-medium tracking-wide hover:bg-text-primary/90 transition-all duration-300"
+                              >
+                                {p.actionButton}
+                                <span>→</span>
+                              </button>
+                            ) : p.actionHref ? (
+                              <a
+                                href={p.actionHref}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-text-primary text-surface-0 text-sm font-medium tracking-wide hover:bg-text-primary/90 transition-all duration-300"
+                              >
+                                {p.actionButton}
+                                <span>→</span>
+                              </a>
+                            ) : null}
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  </motion.div>
+                );
+              })}
+            </motion.div>
+          </div>
+
+          <div className="flex items-center justify-center gap-3 mt-10">
+            <button
+              onClick={prev}
+              className="p-2 rounded-full border border-border text-text-muted hover:text-text-primary hover:border-border-light transition-all duration-300"
+              aria-label="Anterior"
+            >
+              <svg
+                width="16"
+                height="16"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+              >
+                <path d="M15 18l-6-6 6-6" />
+              </svg>
+            </button>
+
+            <div className="flex items-center gap-2">
+              {projects.map((_, i) => (
+                <button
+                  key={i}
+                  onClick={() => goTo(i)}
+                  className="relative p-1"
+                  aria-label={`Ir al proyecto ${i + 1}`}
+                >
+                  <span
+                    className={[
+                      "block rounded-full transition-all duration-500",
+                      i === current
+                        ? "w-8 h-1.5 bg-text-primary"
+                        : "w-1.5 h-1.5 bg-text-muted hover:bg-text-secondary",
+                    ].join(" ")}
+                  />
+                </button>
+              ))}
+            </div>
+
+            <button
+              onClick={next}
+              className="p-2 rounded-full border border-border text-text-muted hover:text-text-primary hover:border-border-light transition-all duration-300"
+              aria-label="Siguiente"
+            >
+              <svg
+                width="16"
+                height="16"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+              >
+                <path d="M9 18l6-6-6-6" />
+              </svg>
+            </button>
+          </div>
+
+          <div className="flex items-center justify-center mt-4">
+            <span className="text-xs text-text-muted font-mono tracking-widest">
+              {String(current + 1).padStart(2, "0")} /{" "}
+              {String(totalSlides).padStart(2, "0")}
+            </span>
+          </div>
         </div>
       </motion.div>
 

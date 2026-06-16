@@ -1,6 +1,5 @@
 import React from "react";
-import { motion } from "framer-motion";
-import Magnet  from '../pixel/magnet';
+import * as motion from "motion/react-client";
 import { FaEnvelope, FaPhoneAlt, FaMapMarkerAlt, FaGithub, FaTwitter } from "react-icons/fa";
 
 const ContactPage = () => {
@@ -8,7 +7,7 @@ const ContactPage = () => {
     { icon: <FaEnvelope />, text: "codecrafters.contact.dev@gmail.com" },
     { icon: <FaPhoneAlt />, text: "+52 775 758 0699" },
     { icon: <FaPhoneAlt />, text: "+52 771 349 5009" },
-    { icon: <FaMapMarkerAlt />, text: "Tulancingo Hidalgo, México" },
+    { icon: <FaMapMarkerAlt />, text: "Tulancingo, Hidalgo, México" },
   ];
 
   const socialLinks = [
@@ -17,73 +16,68 @@ const ContactPage = () => {
   ];
 
   return (
-    <div className="bg-gradient-to-b from-slate-950 via-slate-900 to-slate-800 flex flex-col justify-center items-center min-h-screen px-6 text-center py-16">
-      {/* Título */}
-      <motion.h2
-        initial={{ y: -30, opacity: 0 }}
-        animate={{ y: 0, opacity: 1 }}
-        transition={{ duration: 0.8 }}
-        className="text-4xl md:text-5xl font-extrabold bg-gradient-to-r from-indigo-400 via-cyan-400 to-purple-400 bg-clip-text text-transparent drop-shadow-lg"
-      >
-        Contáctanos
-      </motion.h2>
+    <motion.div
+      id="contact"
+      initial={{ opacity: 0, y: 60 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+      viewport={{ once: true }}
+      className="bg-surface-1 min-h-screen flex flex-col justify-center items-center px-6 py-24"
+    >
+      <div className="max-w-xl mx-auto text-center">
+        <p className="text-sm font-medium tracking-widest text-text-muted uppercase mb-4">
+          Contacto
+        </p>
+        <h2 className="text-3xl md:text-4xl font-bold tracking-tight text-text-primary">
+          Hablemos de tu proyecto.
+        </h2>
+        <p className="mt-6 text-base leading-relaxed text-text-secondary">
+          ¿Tienes una idea, proyecto o duda? Estamos aquí para ayudarte.
+          Envíanos un mensaje y te responderemos lo antes posible.
+        </p>
 
-      <div className="w-24 h-1.5 mb-5 bg-gradient-to-r from-indigo-500 to-cyan-400 mx-auto mt-3 rounded-full"></div>
+        <div className="mt-14 space-y-5 text-left">
+          {contactInfo.map((item, index) => (
+            <motion.div
+              key={index}
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{
+                duration: 0.5,
+                ease: [0.16, 1, 0.3, 1],
+                delay: 0.1 * index,
+              }}
+              viewport={{ once: true }}
+              className="flex items-center gap-4 px-5 py-4 rounded-xl bg-surface-2 border border-border"
+            >
+              <span className="text-text-muted text-lg">{item.icon}</span>
+              <span className="text-sm text-text-secondary">{item.text}</span>
+            </motion.div>
+          ))}
+        </div>
 
-      <motion.p
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 0.3, duration: 0.8 }}
-        className="text-primary max-w-xl mb-10 text-white"
-      >
-        ¿Tienes una idea, proyecto o duda? ¡Estamos aquí para ayudarte! 
-            Envíanos un mensaje y te responderemos lo antes posible.
-
-      </motion.p>
-
-      {/* Información de contacto */}
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 0.5, duration: 0.8 }}
-        className="space-y-4 text-lg text-white"
-      >
-        {contactInfo.map((item, index) => (
-          <div
-            key={index}
-            className="flex items-center justify-center gap-3 hover:text-cyan-400 transition-colors cursor-pointer"
-          >
-            <span className="text-secondary">{item.icon}</span>
-            <span>{item.text}</span>
-          </div>
-        ))}
-      </motion.div>
-
-      <Magnet padding={50} disabled={false} magnetStrength={10}>
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 0.7, duration: 0.8 }}
-        className="flex items-center justify-center gap-6 mt-10"
-      >
-        {socialLinks.map((link, index) => (
-          <a
-            key={index}
-            href={link.url}
-            target="_blank"
-            rel="noopener noreferrer"
-            aria-label={link.label}
-            className="p-3 rounded-full bg-gray-800 hover:bg-secondary transition-colors text-2xl flex items-center justify-center"
-          >
-            {link.icon}
-          </a>
-        ))}
-      </motion.div>
-      </Magnet>
-
-      {/* Redes sociales */}
-      
-    </div>
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1], delay: 0.6 }}
+          viewport={{ once: true }}
+          className="mt-14 flex items-center justify-center gap-4"
+        >
+          {socialLinks.map((link, index) => (
+            <a
+              key={index}
+              href={link.url}
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label={link.label}
+              className="p-3 rounded-xl bg-surface-2 border border-border text-text-muted hover:text-text-primary hover:border-border-light transition-all duration-300 text-lg"
+            >
+              {link.icon}
+            </a>
+          ))}
+        </motion.div>
+      </div>
+    </motion.div>
   );
 };
 

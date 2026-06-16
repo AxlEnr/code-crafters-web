@@ -12,31 +12,26 @@ const Card = ({
   icon
 }: CardProps) => {
   return (
-    <div
-      className="bg-slate-900/70 backdrop-blur-md border border-slate-700 shadow-lg rounded-2xl p-8 hover:shadow-cyan-400/20 transition hover:scale-105 transform duration-300"
-      style={{
-        transition: 'all 0.3s ease',
-      }}
-      onMouseEnter={(e) => {
-        e.currentTarget.style.transform = 'scale(1.05)';
-      }}
-      onMouseLeave={(e) => {
-        e.currentTarget.style.transform = 'scale(1)';
-      }}
-    >
-      <div className="flex justify-center">
+    <div className="group relative bg-surface-2 border border-border rounded-2xl p-8 transition-all duration-500 hover:border-border-light">
+      <div className="absolute inset-0 bg-gradient-to-b from-surface-1/0 via-surface-1/0 to-surface-1/40 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+
+      <div className="relative">
         {icon && (
-          <div className="w-12 h-12 text-cyan-400">{icon}</div>
+          <div className="mb-5 inline-flex p-3 rounded-xl bg-surface-1 border border-border text-text-secondary group-hover:text-text-primary transition-colors duration-500">
+            {icon}
+          </div>
         )}
-      </div>
-      <div className="mt-6 text-xl font-bold text-white">
+
         {title && (
-          <h3>{title}</h3>
+          <h3 className="text-lg font-semibold tracking-tight text-text-primary">
+            {title}
+          </h3>
         )}
-      </div>
-      <div className="mt-3 text-gray-400">
+
         {content && (
-          <p>{content}</p>
+          <p className="mt-3 text-sm leading-relaxed text-text-secondary">
+            {content}
+          </p>
         )}
       </div>
     </div>
@@ -44,4 +39,3 @@ const Card = ({
 };
 
 export default Card;
-
