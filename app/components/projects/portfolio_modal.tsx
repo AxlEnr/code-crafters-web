@@ -1,5 +1,6 @@
-
-import React, { useEffect } from "react";
+import { X } from "lucide-react";
+import { useEffect } from "react";
+import SpotlightCard from "../SpotlightCard";
 
 type Props = {
   open: boolean;
@@ -7,12 +8,14 @@ type Props = {
   links: { axel: string; arturo: string };
 };
 
-const PortfolioModal: React.FC<Props> = ({ open, onClose, links }) => {
+export default function PortfolioModal({ open, onClose, links }: Props) {
   useEffect(() => {
     if (!open) return;
-    const onKey = (e: KeyboardEvent) => {
-      if (e.key === "Escape") onClose();
+
+    const onKey = (event: KeyboardEvent) => {
+      if (event.key === "Escape") onClose();
     };
+
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
   }, [open, onClose]);
@@ -20,44 +23,49 @@ const PortfolioModal: React.FC<Props> = ({ open, onClose, links }) => {
   if (!open) return null;
 
   return (
-    <div className="fixed inset-0 z-50">
-      <div
-        className="absolute inset-0 bg-slate-950/70 backdrop-blur-sm"
+    <div className="fixed inset-0 z-[60]">
+      <button
+        type="button"
+        aria-label="Cerrar modal"
+        className="absolute inset-0 h-full w-full bg-slate-950/75 backdrop-blur-sm"
         onClick={onClose}
       />
-      <div className="relative z-10 flex min-h-full items-center justify-center p-6">
-        <div
+      <div className="relative z-10 flex min-h-full items-center justify-center p-4">
+        <SpotlightCard
+          as="div"
           role="dialog"
           aria-modal="true"
           aria-labelledby="portfolio-modal-title"
-          className="w-full max-w-md rounded-2xl border border-slate-700/60 bg-slate-900/90 p-6 shadow-2xl ring-1 ring-white/5"
+          className="w-full max-w-md rounded-lg border border-white/10 bg-slate-950/95 p-6 shadow-2xl shadow-cyan-950/30"
         >
           <div className="flex items-start justify-between gap-4">
-            <h2
-              id="portfolio-modal-title"
-              className="text-xl font-semibold text-white"
-            >
-              Ver portafolio
-            </h2>
+            <div>
+              <p className="text-xs font-bold uppercase text-cyan-300">
+                Portafolios
+              </p>
+              <h2
+                id="portfolio-modal-title"
+                className="mt-2 text-2xl font-black text-white"
+              >
+                Elige un caso para explorar
+              </h2>
+            </div>
             <button
+              type="button"
               aria-label="Cerrar modal"
               onClick={onClose}
-              className="rounded-lg border border-slate-700/60 p-1 text-slate-300 hover:text-white hover:border-cyan-400/50 focus:outline-none focus-visible:ring-2 focus-visible:ring-cyan-400/60"
+              className="rounded-lg border border-white/10 p-2 text-slate-300 transition hover:border-cyan-300/50 hover:text-white"
             >
-              ✕
+              <X className="h-4 w-4" />
             </button>
           </div>
 
-          <p className="mt-2 text-sm text-slate-300/90">
-            Elige qué portafolio quieres abrir:
-          </p>
-
-          <div className="mt-5 grid grid-cols-1 gap-3">
+          <div className="mt-6 grid gap-3">
             <a
               href={links.axel}
               target="_blank"
               rel="noopener noreferrer"
-              className="w-full rounded-xl border border-cyan-400/40 bg-slate-900/50 px-4 py-3 text-center font-semibold text-white transition hover:border-cyan-400/70 hover:shadow-cyan-400/10 focus:outline-none focus-visible:ring-2 focus-visible:ring-cyan-400/60"
+              className="rounded-lg border border-cyan-300/20 bg-cyan-300/10 px-4 py-3 text-center font-bold text-white transition hover:border-cyan-300/60"
             >
               Ver portafolio de Axel
             </a>
@@ -65,15 +73,13 @@ const PortfolioModal: React.FC<Props> = ({ open, onClose, links }) => {
               href={links.arturo}
               target="_blank"
               rel="noopener noreferrer"
-              className="w-full rounded-xl border border-cyan-400/40 bg-slate-900/50 px-4 py-3 text-center font-semibold text-white transition hover:border-cyan-400/70 hover:shadow-cyan-400/10 focus:outline-none focus-visible:ring-2 focus-visible:ring-cyan-400/60"
+              className="rounded-lg border border-purple-300/20 bg-purple-300/10 px-4 py-3 text-center font-bold text-white transition hover:border-purple-300/60"
             >
               Ver portafolio de Arturo
             </a>
           </div>
-        </div>
+        </SpotlightCard>
       </div>
     </div>
   );
-};
-
-export default PortfolioModal;
+}

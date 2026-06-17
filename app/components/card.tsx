@@ -1,4 +1,5 @@
 import React from 'react';
+import SpotlightCard from "./SpotlightCard";
 
 type CardProps = {
   title?: React.ReactNode;
@@ -12,8 +13,8 @@ const Card = ({
   icon
 }: CardProps) => {
   return (
-    <div
-      className="bg-slate-900/70 backdrop-blur-md border border-slate-700 shadow-lg rounded-2xl p-8 hover:shadow-cyan-400/20 transition hover:scale-105 transform duration-300"
+    <SpotlightCard
+      className="rounded-lg border border-slate-700 bg-slate-900/70 p-8 shadow-lg backdrop-blur-md transition duration-300 hover:scale-105 hover:shadow-cyan-400/20"
       style={{
         transition: 'all 0.3s ease',
       }}
@@ -39,7 +40,7 @@ const Card = ({
           <p>{content}</p>
         )}
       </div>
-    </div>
+    </SpotlightCard>
   );
 };
 

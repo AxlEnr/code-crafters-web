@@ -1,50 +1,91 @@
-import React, { useState } from "react";
+import { useEffect, useState } from "react";
 import AboutUsComponent from "./components/about_us/about_us";
+import BackgroundGlow from "./components/background_glow";
+import ContactPage from "./components/contact/contact";
 import FooterComponent from "./components/home/footer";
 import HomeComponent from "./components/home/home";
 import NavbarComponent from "./components/navbar";
+import Particles from "./components/pixel/Particles";
+import Process from "./components/process";
 import Projects from "./components/projects/projects";
 import ServicesComponent from "./components/services/services";
-import ContactPage from "./components/contact/contact";
-
-type Section = "home" | "about" | "services" | "projects" | "contact";
+import Team from "./components/team";
+import TechStack from "./components/tech_stack";
+import WhyChooseUs from "./components/why_choose_us";
+import type { SectionId } from "./data/landing";
 
 export function Index() {
-  const [active, setActive] = useState<Section>("home");
+  const [active, setActive] = useState<SectionId>("home");
 
-  const handleNavigate = (section: Section) => {
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const visibleEntry = entries
+          .filter((entry) => entry.isIntersecting)
+          .sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0];
+
+        if (visibleEntry?.target.id) {
+          setActive(visibleEntry.target.id as SectionId);
+        }
+      },
+      { rootMargin: "-30% 0px -55% 0px", threshold: [0.08, 0.2, 0.4] }
+    );
+
+    const sections = ["home", "about", "services", "projects", "contact"];
+    sections.forEach((section) => {
+      const element = document.getElementById(section);
+      if (element) observer.observe(element);
+    });
+
+    return () => observer.disconnect();
+  }, []);
+
+  const handleNavigate = (section: SectionId) => {
     setActive(section);
-    const el = document.getElementById(section);
-    if (el) {
-      el.scrollIntoView({ behavior: "smooth" });
-    }
+    const element = document.getElementById(section);
+    element?.scrollIntoView({ behavior: "smooth", block: "start" });
   };
 
   return (
-    <div className="overflow-x-hidden min-h-screen">
+    <div className="relative min-h-screen overflow-x-hidden bg-slate-950 text-white">
+      <BackgroundGlow />
+      <div
+        aria-hidden="true"
+        className="pointer-events-none fixed inset-0 z-0 opacity-70"
+      >
+        <div className="h-full w-full">
+          <Particles
+            particleCount={300}
+            particleSpread={10}
+            speed={0.1}
+            particleColors={["#ffffff", "#ffffff", "#ffffff"]}
+            moveParticlesOnHover={false}
+            particleHoverFactor={1}
+            alphaParticles={false}
+            particleBaseSize={100}
+            sizeRandomness={1}
+            cameraDistance={20}
+            disableRotation={false}
+          />
+        </div>
+      </div>
       <NavbarComponent active={active} onNavigate={handleNavigate} />
 
-      <main className="flex-grow items-center justify-center">
-        <section id="home">
-          <HomeComponent />
-        </section>
-        <section id="about">
-          <AboutUsComponent />
-        </section>
-        <section id="services">
-          <ServicesComponent />
-        </section>
-        <section id="projects">
-          <Projects />
-        </section>
-        <section id="contact">
-          <ContactPage />
-        </section>
+      <main className="relative z-10">
+        <HomeComponent onNavigate={handleNavigate} />
+        <AboutUsComponent />
+        <ServicesComponent />
+        <Projects />
+        <Team />
+        <Process />
+        <TechStack />
+        <WhyChooseUs />
+        <ContactPage />
       </main>
 
-      <footer className="text-center items-center flex-shrink-0">
-        <FooterComponent />
-      </footer>
+      <div className="relative z-10">
+        <FooterComponent onNavigate={handleNavigate} />
+      </div>
     </div>
   );
 }

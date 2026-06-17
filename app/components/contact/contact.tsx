@@ -1,90 +1,184 @@
-import React from "react";
-import { motion } from "framer-motion";
-import Magnet  from '../pixel/magnet';
-import { FaEnvelope, FaPhoneAlt, FaMapMarkerAlt, FaGithub, FaTwitter } from "react-icons/fa";
+import { Github, Mail, MapPin, MessageCircle, Phone, Send, Twitter } from "lucide-react";
+import { motion } from "motion/react";
+import type { FormEvent } from "react";
+import { contactInfo } from "../../data/landing";
+import SpotlightCard from "../SpotlightCard";
 
-const ContactPage = () => {
-  const contactInfo = [
-    { icon: <FaEnvelope />, text: "codecrafters.contact.dev@gmail.com" },
-    { icon: <FaPhoneAlt />, text: "+52 775 758 0699" },
-    { icon: <FaPhoneAlt />, text: "+52 771 349 5009" },
-    { icon: <FaMapMarkerAlt />, text: "Tulancingo Hidalgo, México" },
-  ];
+export default function ContactPage() {
+  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
 
-  const socialLinks = [
-    { icon: <FaGithub />, url: "https://github.com/AxlEnr", label: "GitHub" },
-    { icon: <FaTwitter />, url: "https://x.com/code_craft_dev", label: "Twitter" },
-  ];
+    const formData = new FormData(event.currentTarget);
+    const name = String(formData.get("name") ?? "");
+    const email = String(formData.get("email") ?? "");
+    const projectType = String(formData.get("projectType") ?? "");
+    const message = String(formData.get("message") ?? "");
+
+    const body = [
+      `Nombre: ${name}`,
+      `Correo: ${email}`,
+      `Tipo de proyecto: ${projectType}`,
+      "",
+      message,
+    ].join("\n");
+
+    window.location.href = `mailto:${contactInfo.email}?subject=${encodeURIComponent(
+      "Nuevo proyecto para Code Crafters"
+    )}&body=${encodeURIComponent(body)}`;
+  };
 
   return (
-    <div className="bg-gradient-to-b from-slate-950 via-slate-900 to-slate-800 flex flex-col justify-center items-center min-h-screen px-6 text-center py-16">
-      {/* Título */}
-      <motion.h2
-        initial={{ y: -30, opacity: 0 }}
-        animate={{ y: 0, opacity: 1 }}
-        transition={{ duration: 0.8 }}
-        className="text-4xl md:text-5xl font-extrabold bg-gradient-to-r from-indigo-400 via-cyan-400 to-purple-400 bg-clip-text text-transparent drop-shadow-lg"
-      >
-        Contáctanos
-      </motion.h2>
-
-      <div className="w-24 h-1.5 mb-5 bg-gradient-to-r from-indigo-500 to-cyan-400 mx-auto mt-3 rounded-full"></div>
-
-      <motion.p
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 0.3, duration: 0.8 }}
-        className="text-primary max-w-xl mb-10 text-white"
-      >
-        ¿Tienes una idea, proyecto o duda? ¡Estamos aquí para ayudarte! 
-            Envíanos un mensaje y te responderemos lo antes posible.
-
-      </motion.p>
-
-      {/* Información de contacto */}
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 0.5, duration: 0.8 }}
-        className="space-y-4 text-lg text-white"
-      >
-        {contactInfo.map((item, index) => (
-          <div
-            key={index}
-            className="flex items-center justify-center gap-3 hover:text-cyan-400 transition-colors cursor-pointer"
+    <section id="contact" className="relative px-4 py-12 sm:px-6 sm:py-20 lg:px-8">
+      <div className="mx-auto max-w-7xl">
+        <div className="grid gap-6 lg:grid-cols-[0.9fr_1.1fr] lg:items-stretch">
+          <motion.div
+            initial={{ opacity: 0, y: 24 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, amount: 0.35 }}
+            transition={{ duration: 0.6 }}
+            className="h-full"
           >
-            <span className="text-secondary">{item.icon}</span>
-            <span>{item.text}</span>
-          </div>
-        ))}
-      </motion.div>
+            <SpotlightCard className="h-full rounded-lg border border-cyan-300/20 bg-cyan-300/[0.07] p-6 backdrop-blur-xl sm:p-8">
+              <p className="text-xs font-bold uppercase text-cyan-200">Contacto</p>
+            <h2 className="mt-4 text-3xl font-black text-white sm:text-5xl">
+              ¿Tienes una idea? La convertimos en software.
+            </h2>
+            <p className="mt-5 text-base leading-8 text-slate-300">
+              Cuéntanos qué necesitas y te ayudamos a aterrizarlo: sitio web,
+              app, sistema interno o plataforma completa.
+            </p>
 
-      <Magnet padding={50} disabled={false} magnetStrength={10}>
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 0.7, duration: 0.8 }}
-        className="flex items-center justify-center gap-6 mt-10"
-      >
-        {socialLinks.map((link, index) => (
-          <a
-            key={index}
-            href={link.url}
-            target="_blank"
-            rel="noopener noreferrer"
-            aria-label={link.label}
-            className="p-3 rounded-full bg-gray-800 hover:bg-secondary transition-colors text-2xl flex items-center justify-center"
+            <a
+              href={contactInfo.whatsappHref}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="mt-8 inline-flex items-center gap-2 rounded-lg bg-cyan-300 px-6 py-4 text-sm font-black text-slate-950 shadow-xl shadow-cyan-950/30 transition hover:bg-white"
+            >
+              <MessageCircle className="h-5 w-5" />
+              Escribir por WhatsApp
+            </a>
+
+            <div className="mt-8 grid gap-4 text-sm text-slate-200">
+              <a
+                href={`mailto:${contactInfo.email}`}
+                className="flex items-center gap-3 transition hover:text-cyan-200"
+              >
+                <Mail className="h-5 w-5 text-cyan-200" />
+                {contactInfo.email}
+              </a>
+              {contactInfo.phones.map((phone) => (
+                <a
+                  key={phone}
+                  href={`tel:${phone.replaceAll(" ", "")}`}
+                  className="flex items-center gap-3 transition hover:text-cyan-200"
+                >
+                  <Phone className="h-5 w-5 text-cyan-200" />
+                  {phone}
+                </a>
+              ))}
+              <p className="flex items-center gap-3">
+                <MapPin className="h-5 w-5 text-cyan-200" />
+                {contactInfo.location}
+              </p>
+            </div>
+
+              <div className="mt-8 flex gap-3">
+              <a
+                href={contactInfo.social.github}
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="GitHub de Code Crafters"
+                className="rounded-lg border border-white/10 bg-white/5 p-3 text-white transition hover:border-cyan-300/50"
+              >
+                <Github className="h-5 w-5" />
+              </a>
+              <a
+                href={contactInfo.social.twitter}
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="X de Code Crafters"
+                className="rounded-lg border border-white/10 bg-white/5 p-3 text-white transition hover:border-cyan-300/50"
+              >
+                <Twitter className="h-5 w-5" />
+              </a>
+              </div>
+            </SpotlightCard>
+          </motion.div>
+
+          <motion.div
+            initial={{ opacity: 0, y: 24 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, amount: 0.35 }}
+            transition={{ delay: 0.08, duration: 0.6 }}
+            className="h-full"
           >
-            {link.icon}
-          </a>
-        ))}
-      </motion.div>
-      </Magnet>
+            <SpotlightCard
+              as="form"
+              onSubmit={handleSubmit}
+              className="h-full rounded-lg border border-white/10 bg-white/[0.045] p-6 backdrop-blur-xl sm:p-8"
+            >
+              <div className="grid gap-4 sm:grid-cols-2">
+              <label className="grid gap-2 text-sm font-semibold text-slate-200">
+                Nombre
+                <input
+                  type="text"
+                  name="name"
+                  autoComplete="name"
+                  className="rounded-lg border border-white/10 bg-slate-950/70 px-4 py-3 text-white outline-none transition placeholder:text-slate-500 focus:border-cyan-300/60"
+                  placeholder="Tu nombre"
+                />
+              </label>
+              <label className="grid gap-2 text-sm font-semibold text-slate-200">
+                Correo
+                <input
+                  type="email"
+                  name="email"
+                  autoComplete="email"
+                  className="rounded-lg border border-white/10 bg-slate-950/70 px-4 py-3 text-white outline-none transition placeholder:text-slate-500 focus:border-cyan-300/60"
+                  placeholder="correo@empresa.com"
+                />
+              </label>
+            </div>
 
-      {/* Redes sociales */}
-      
-    </div>
+            <label className="mt-4 grid gap-2 text-sm font-semibold text-slate-200">
+              Tipo de proyecto
+              <select
+                name="projectType"
+                className="rounded-lg border border-white/10 bg-slate-950/70 px-4 py-3 text-white outline-none transition focus:border-cyan-300/60"
+                defaultValue=""
+              >
+                <option value="" disabled>
+                  Selecciona una opción
+                </option>
+                <option>Sitio web</option>
+                <option>Aplicación móvil</option>
+                <option>Sistema de gestión</option>
+                <option>Automatización o chatbot</option>
+                <option>Otro</option>
+              </select>
+            </label>
+
+            <label className="mt-4 grid gap-2 text-sm font-semibold text-slate-200">
+              Mensaje
+              <textarea
+                name="message"
+                rows={6}
+                className="resize-none rounded-lg border border-white/10 bg-slate-950/70 px-4 py-3 text-white outline-none transition placeholder:text-slate-500 focus:border-cyan-300/60"
+                placeholder="Cuéntanos qué necesitas construir..."
+              />
+            </label>
+
+              <button
+                type="submit"
+                className="mt-6 inline-flex w-full items-center justify-center gap-2 rounded-lg border border-cyan-300/30 bg-cyan-300/10 px-6 py-4 text-sm font-black text-cyan-100 transition hover:bg-cyan-300 hover:text-slate-950"
+              >
+                Enviar mensaje
+                <Send className="h-4 w-4" />
+              </button>
+            </SpotlightCard>
+          </motion.div>
+        </div>
+      </div>
+    </section>
   );
-};
-
-export default ContactPage;
+}

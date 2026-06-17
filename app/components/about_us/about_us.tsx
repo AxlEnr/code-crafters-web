@@ -1,88 +1,62 @@
-import * as motion from "motion/react-client";
-import { Users, Lightbulb, Rocket, User } from "lucide-react";
-import Card from "../card";
-
-const iconLibrary = {
-  users: Users,
-  lightbulb: Lightbulb,
-  rocket: Rocket,
-  user: User
-};
-
-const getIcon = (iconName: keyof typeof iconLibrary, className = "w-12 h-12") => {
-  const IconComponent = iconLibrary[iconName];
-  return IconComponent ? <IconComponent className={className} /> : null;
-};
-
-const card_services = [
-  {
-    icon: 'users',
-    iconColor: 'text-indigo-400',
-    title: 'Equipo Humano',
-    content: 'Creemos en la colaboración y el talento colectivo. Cada proyecto es impulsado por la creatividad y el compromiso de nuestro equipo.'
-  },
-  {
-    icon: 'lightbulb',
-    iconColor: 'text-yellow-400',
-    title: 'Innovación',
-    content: 'Nos mantenemos a la vanguardia tecnológica para diseñar soluciones creativas, seguras y escalables que generen verdadero valor.'
-  },
-  {
-    icon: 'rocket',
-    iconColor: 'text-cyan-400',
-    title: 'Crecimiento',
-    content: 'Nuestra meta es crecer junto a nuestros clientes, impulsando sus ideas y ayudándolos a conquistar nuevas oportunidades digitales.'
-  }
-];
+import { motion } from "motion/react";
+import { aboutPillars } from "../../data/landing";
+import SectionHeader from "../section_header";
+import SpotlightCard from "../SpotlightCard";
 
 export default function AboutUsComponent() {
   return (
-    <motion.div
-    id="about-us"
-      initial={{ opacity: 0, y: 80 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      transition={{
-        duration: 1,
-        ease: [0.16, 1, 0.3, 1],
-      }}
-      viewport={{ once: true }}
-      className="bg-gradient-to-b from-slate-950 via-slate-900 to-slate-800 py-20 px-6 md:px-12 lg:px-24"
-    >
-      <div className="max-w-6xl mx-auto text-center">
-        <h2 className="text-4xl md:text-5xl font-extrabold bg-gradient-to-r from-indigo-400 via-cyan-400 to-purple-400 bg-clip-text text-transparent drop-shadow-lg">
-          ¿Quiénes somos?
-        </h2>
-        <div className="w-24 h-1.5 bg-gradient-to-r from-indigo-500 to-cyan-400 mx-auto mt-3 rounded-full"></div>
-        <p className="mt-6 text-lg text-gray-300 max-w-3xl mx-auto leading-relaxed">
-          En <span className="font-semibold text-cyan-400">Code Crafters</span>{" "}
-          transformamos ideas en software de alto impacto. Somos un equipo
-          apasionado por crear soluciones digitales que inspiran, innovan y
-          hacen crecer a nuestros clientes.
-        </p>
-        <p className="mt-4 text-lg text-gray-300 max-w-3xl mx-auto">
-          Nuestra misión principal es crear soluciones eficientes para clientes,
-          enfocados en el desarrollo multiplataforma y con atención a la
-          necesidad de cada usuario.
-        </p>
-      </div>
+    <section id="about" className="relative px-4 py-12 sm:px-6 sm:py-20 lg:px-8">
+      <div className="mx-auto grid max-w-7xl gap-8 sm:gap-10 lg:grid-cols-[0.9fr_1.1fr] lg:items-center">
+        <motion.div
+          initial={{ opacity: 0, y: 24 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, amount: 0.35 }}
+          transition={{ duration: 0.6 }}
+        >
+          <SectionHeader
+            align="left"
+            eyebrow="Quiénes somos"
+            title="Un estudio de desarrollo para negocios que quieren verse y operar mejor."
+            description="En Code Crafters convertimos ideas en soluciones digitales modernas: sitios web, apps, sistemas internos y automatizaciones que combinan diseño, funcionalidad y escalabilidad."
+          />
+          <p className="mt-6 text-base leading-8 text-slate-300">
+            Ayudamos a negocios, emprendimientos y proyectos profesionales a
+            construir una presencia digital confiable, con interfaces pensadas
+            para usuarios reales y una base técnica lista para crecer.
+          </p>
+        </motion.div>
 
-      <div className="mt-16">
-        <div className="grid gap-10 md:grid-cols-3">
-          {card_services.map((service, index) => (
-            <motion.div
-              key={index}
-              whileHover={{ scale: 1.05 }}
-              transition={{ type: "spring", stiffness: 200 }}
-            >
-              <Card
-                title={service.title}
-                content={service.content}
-                icon={getIcon(service.icon as keyof typeof iconLibrary, `w-12 h-12 ${service.iconColor}`)}
-              />
-            </motion.div>
-          ))}
+        <div className="grid gap-4 sm:grid-cols-3 lg:grid-cols-1">
+          {aboutPillars.map((pillar, index) => {
+            const Icon = pillar.icon;
+
+            return (
+              <motion.article
+                key={pillar.title}
+                initial={{ opacity: 0, y: 22 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, amount: 0.35 }}
+                transition={{ delay: index * 0.08, duration: 0.55 }}
+                className="h-full"
+              >
+                <SpotlightCard className="h-full rounded-lg border border-white/10 bg-white/[0.045] p-6 backdrop-blur-xl">
+                  <div className="flex flex-col gap-4 sm:items-start lg:flex-row">
+                    <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-lg border border-cyan-300/20 bg-cyan-300/10 text-cyan-200">
+                      <Icon className="h-6 w-6" />
+                    </div>
+                    <div>
+                      <h3 className="text-lg font-bold text-white">{pillar.title}</h3>
+                      <p className="mt-2 text-sm leading-7 text-slate-300">
+                        {pillar.description}
+                      </p>
+                    </div>
+                  </div>
+                </SpotlightCard>
+              </motion.article>
+            );
+          })}
         </div>
       </div>
-    </motion.div>
+    </section>
   );
 }

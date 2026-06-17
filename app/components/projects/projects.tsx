@@ -1,120 +1,140 @@
-import React, { useState, useMemo } from "react";
+import { useRef, useState } from "react";
+import { ChevronLeft, ChevronRight } from "lucide-react";
+import { motion } from "motion/react";
+import { projects } from "../../data/landing";
+import SectionHeader from "../section_header";
 import ProjectCard from "./project_card";
-import PortfolioModal from "./portfolio_modal";
-import { motion, px } from "framer-motion";
 
 export default function Projects() {
-  const [showPortfolioModal, setShowPortfolioModal] = useState(false);
-
-  const projects_obj = useMemo(
-    () => [
-      {
-        title: "Flores en Hidalgo",
-        content:
-          "Un recorrido visual por la flora con propiedades maravillosas ubicadas en la región de Hidalgo. Una web interactiva que muestra la riqueza natural del estado y su diversidad botánica.",
-        src: "/assets/projects/flores.png",
-        alt: "Imagen de la web",
-        actionButton: "Explorar sitio",
-        actionHref: "https://plantshidalgo.netlify.app",
-      },
-      {
-        title: "M.I.A.U",
-        content:
-          "Red social enfocada en la búsqueda y adopción responsable de mascotas. Conecta a rescatistas, albergues y personas que buscan un nuevo integrante para su familia.",
-        src: "/assets/projects/miau.png",
-        alt: "Imagen de la app",
-        actionButton: "Descargar APK",
-        actionHref: "/descargas/miau.apk",
-      },
-      {
-        title: "P.A.W.S",
-        content:
-          "Aplicación móvil diseñada para fortalecer la convivencia familiar mediante recuerdos y experiencias compartidas con las mascotas del hogar.",
-        src: "/assets/projects/paws.jpg",
-        alt: "Imagen de la app",
-        actionButton: "Descargar APK",
-        actionHref: "/descargas/paws.apk",
-      },
-      {
-        title: "Sitio web de ciberseguridad",
-        content:
-          "Una plataforma informativa que ofrece consejos prácticos y recursos para aprender a protegerse en el mundo digital y navegar con mayor seguridad.",
-        src: "/assets/projects/cibersec.png",
-        alt: "Imagen de la web",
-        actionButton: "Visitar sitio",
-        actionHref: "https://cibersec-web.vercel.app/",
-      },
-      {
-        title: "CrowPI Assistant",
-        content:
-          "Asistente virtual desarrollado para la CrowPI. Un proyecto educativo que facilita la exploración de este dispositivo y potencia el aprendizaje interactivo.",
-        src: "/assets/projects/gama.png",
-        alt: "Imagen del proyecto",
-      },
-      {
-        title: "Portafolios",
-        content:
-          "Muestra de portafolios digitales que reflejan creatividad, experiencia y estilo personal. Una ventana a distintos proyectos y enfoques de diseño.",
-        src: "/assets/projects/portfolio.png",
-        alt: "Imagen de la web",
-        actionButton: "Explorar portafolios",
-        actionHref: "#modal_portfolios", 
-      },
-    ],
-    []
+  const projectItems = projects.filter(
+    (project) => project.actionHref !== "#modal_portfolios"
   );
+  const [activeProject, setActiveProject] = useState(0);
+  const scrollerRef = useRef<HTMLDivElement>(null);
+  const cardRefs = useRef<(HTMLDivElement | null)[]>([]);
+
+  const scrollToProject = (index: number) => {
+    const nextIndex = (index + projectItems.length) % projectItems.length;
+    setActiveProject(nextIndex);
+    cardRefs.current[nextIndex]?.scrollIntoView({
+      behavior: "smooth",
+      block: "nearest",
+      inline: "center",
+    });
+  };
+
+  const updateActiveProject = () => {
+    const scroller = scrollerRef.current;
+    if (!scroller) return;
+
+    const scrollerCenter =
+      scroller.getBoundingClientRect().left + scroller.clientWidth / 2;
+    let closestIndex = activeProject;
+    let closestDistance = Number.POSITIVE_INFINITY;
+
+    cardRefs.current.forEach((card, index) => {
+      if (!card) return;
+      const rect = card.getBoundingClientRect();
+      const cardCenter = rect.left + rect.width / 2;
+      const distance = Math.abs(scrollerCenter - cardCenter);
+
+      if (distance < closestDistance) {
+        closestDistance = distance;
+        closestIndex = index;
+      }
+    });
+
+    if (closestIndex !== activeProject) {
+      setActiveProject(closestIndex);
+    }
+  };
 
   return (
-    <>
-      <motion.div 
-      id="projects"
-      initial={{ opacity: 0, y: 80 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      transition={{
-        duration: 1,
-        ease: [0.16, 1, 0.3, 1],
-      }}
-      viewport={{ once: true }}
-      className="bg-gradient-to-b from-slate-950 via-slate-900 to-slate-800 py-20 px-6 md:px-12 lg:px-24">
-        <div className="max-w-6xl mx-auto text-center">
-          <h2 className="text-4xl md:text-5xl font-extrabold bg-gradient-to-r from-indigo-400 via-cyan-400 to-purple-400 bg-clip-text text-transparent drop-shadow-lg">
-            Nuestros Proyectos
-          </h2>
-          <div className="w-24 h-1.5 mb-5 bg-gradient-to-r from-indigo-500 to-cyan-400 mx-auto mt-3 rounded-full"></div>
-        </div>
-        <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-8 ">
-          {projects_obj.map((p, i) => {
-            const isPortfolioCard = p.title === "Portafolios";
-            return (
-              <ProjectCard
-                key={i}
-                title={p.title}
-                content={p.content}
-                image={{ src: p.src, alt: p.alt ?? "Imagen del proyecto", width: 300 }}
-                actionButton={p.actionButton}
-                actionHref={p.actionHref}
-                onActionClick={
-                  isPortfolioCard
-                    ? (e) => {
-                        e.preventDefault(); 
-                        setShowPortfolioModal(true);
-                      }
-                    : undefined
-                }
-              />
-            );
-          })}
-        </div>
-      </motion.div>
+    <section id="projects" className="relative px-4 py-12 sm:px-6 sm:py-20 lg:px-8">
+      <div className="mx-auto max-w-7xl">
+        <motion.div
+          initial={{ opacity: 0, y: 24 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, amount: 0.35 }}
+          transition={{ duration: 0.6 }}
+        >
+          <SectionHeader
+            align="left"
+            eyebrow="Proyectos"
+            title="Trabajos que hablan por sí mismos."
+            description="Explora algunos proyectos reales en una vista horizontal: sitios, apps y experiencias digitales listas para visitar."
+          />
+        </motion.div>
 
-      <PortfolioModal
-        open={showPortfolioModal}
-        onClose={() => setShowPortfolioModal(false)}
-        links={{
-          axel: "https://portfolio-axel-garcia.vercel.app/",
-          arturo: "https://portfolioarturomd7.netlify.app/",
-        }}
-      />
-    </>
+        <div
+          ref={scrollerRef}
+          onScroll={updateActiveProject}
+          className="mt-8 flex snap-x snap-proximity gap-4 overflow-x-auto overscroll-x-contain scroll-smooth pb-4 sm:mt-12 sm:snap-mandatory sm:gap-5 sm:pb-5 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+        >
+          {projectItems.map((project, index) => (
+            <div
+              key={project.title}
+              ref={(element) => {
+                cardRefs.current[index] = element;
+              }}
+              className="min-w-[82vw] snap-center sm:min-w-[430px] lg:min-w-[520px]"
+            >
+              <ProjectCard
+                title={project.title}
+                type={project.type}
+                description={project.description}
+                image={project.image}
+                alt={project.alt}
+                technologies={project.technologies}
+                actionHref={project.actionHref}
+                isActive={activeProject === index}
+              />
+            </div>
+          ))}
+        </div>
+
+        <div className="mt-2 flex items-center justify-center gap-4 sm:mt-3">
+          <button
+            type="button"
+            aria-label="Proyecto anterior"
+            onClick={() => scrollToProject(activeProject - 1)}
+            className="rounded-full border border-white/10 p-3 text-slate-300 transition hover:border-cyan-300/50 hover:text-white"
+          >
+            <ChevronLeft className="h-4 w-4" />
+          </button>
+
+          <div className="flex items-center gap-2">
+            {projectItems.map((project, index) => (
+              <button
+                key={project.title}
+                type="button"
+                aria-label={`Ver proyecto ${index + 1}`}
+                onClick={() => scrollToProject(index)}
+                className={[
+                  "h-2 rounded-full transition",
+                  activeProject === index
+                    ? "w-8 bg-white"
+                    : "w-2 bg-slate-500 hover:bg-cyan-200",
+                ].join(" ")}
+              />
+            ))}
+          </div>
+
+          <button
+            type="button"
+            aria-label="Proyecto siguiente"
+            onClick={() => scrollToProject(activeProject + 1)}
+            className="rounded-full border border-white/10 p-3 text-slate-300 transition hover:border-cyan-300/50 hover:text-white"
+          >
+            <ChevronRight className="h-4 w-4" />
+          </button>
+        </div>
+
+        <p className="mt-3 text-center text-xs font-semibold tracking-[0.25em] text-slate-500">
+          {String(activeProject + 1).padStart(2, "0")} /{" "}
+          {String(projectItems.length).padStart(2, "0")}
+        </p>
+      </div>
+    </section>
   );
 }

@@ -1,92 +1,94 @@
-import { useState } from "react";
 import { Menu, X } from "lucide-react";
-
-type Section = "home" | "about" | "services" | "projects" | "contact";
+import { useState } from "react";
+import { navItems, type SectionId } from "../data/landing";
 
 export default function NavbarComponent({
   active,
   onNavigate,
 }: {
-  active: Section;
-  onNavigate: (s: Section) => void;
+  active: SectionId;
+  onNavigate: (section: SectionId) => void;
 }) {
   const [open, setOpen] = useState(false);
-  const items: { id: Section; label: string }[] = [
-    { id: "home", label: "Inicio" },
-    { id: "about", label: "Quiénes somos" },
-    { id: "services", label: "Servicios" },
-    { id: "projects", label: "Proyectos" },
-    { id: "contact", label: "Contacto" },
-  ];
+
+  const navigate = (section: SectionId) => {
+    onNavigate(section);
+    setOpen(false);
+  };
 
   return (
-    <nav className="w-full z-50 bg-gradient-to-r from-blue-950 via-cyan-600 to-blue-300 shadow-lg">
-      <div className="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
-        <div className="flex items-center gap-2 text-white font-bold text-xl">
-          <img src="/assets/logo1.png" alt="Logo" className="h-8" />
-          <img src="/assets/logo2.png" alt="Logo" className="h-8" />
+    <nav className="fixed inset-x-0 top-0 z-50 border-b border-white/10 bg-slate-950/70 backdrop-blur-xl">
+      <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-3 sm:px-6 lg:px-8">
+        
+          <span className="flex h-16 w-24 items-center">
+            <img src="/assets/Recurso 7LOGO.png" alt="" className="h-16 w-auto object-contain" />
+          </span>
+
+        
+
+        <div className="hidden items-center gap-1 md:flex">
+          {navItems.map((item) => (
+            <button
+              key={item.id}
+              type="button"
+              onClick={() => navigate(item.id)}
+              aria-current={active === item.id ? "page" : undefined}
+              className={[
+                "rounded-lg px-4 py-2 text-sm font-semibold transition",
+                active === item.id
+                  ? "bg-white/10 text-white"
+                  : "text-slate-300 hover:bg-white/5 hover:text-white",
+              ].join(" ")}
+            >
+              {item.label}
+            </button>
+          ))}
         </div>
 
-        <ul className="hidden md:flex gap-8 text-white font-medium text-sm lg:text-lg">
-          {items.map((i) => (
-            <li key={i.id}>
-              <a
-                onClick={() => onNavigate(i.id)}
-                aria-current={active === i.id ? "page" : undefined}
-                className="relative group cursor-pointer"
-              >
-                {i.label}
-                <span
-                  className={`absolute left-0 -bottom-1 h-[2px] bg-white transition-all ${
-                    active === i.id ? "w-full" : "w-0 group-hover:w-full"
-                  }`}
-                />
-              </a>
-            </li>
-          ))}
-        </ul>
-
-        <button className="hidden lg:inline-flex px-5 py-2 rounded-lg bg-white text-blue-950 font-semibold hover:bg-gray-100 transition shadow">
+        <button
+          type="button"
+          onClick={() => navigate("contact")}
+          className="hidden rounded-lg bg-cyan-300 px-5 py-2.5 text-sm font-black text-slate-950 shadow-lg shadow-cyan-950/30 transition hover:bg-white lg:inline-flex"
+        >
           Cotizar
         </button>
 
         <button
-          onClick={() => setOpen(!open)}
-          className="md:hidden text-white"
+          type="button"
+          onClick={() => setOpen((value) => !value)}
+          className="rounded-lg border border-white/10 p-2 text-white md:hidden"
+          aria-label={open ? "Cerrar menú" : "Abrir menú"}
         >
-          {open ? <X size={28} /> : <Menu size={28} />}
+          {open ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
         </button>
       </div>
 
       {open && (
-        <div className="md:hidden px-6 pb-4 backdrop-blur-sm">
-          <hr className="border-white/20 mb-3" />
-          <ul className="flex flex-col gap-4 text-white font-medium text-lg">
-            {items.map((i) => (
-              <li key={i.id}>
-                <button
-                  onClick={() => {
-                    onNavigate(i.id);
-                    setOpen(false);
-                  }}
-                  aria-current={active === i.id ? "page" : undefined}
-                  className="w-full text-left relative group"
-                >
-                  {i.label}
-                  <span
-                    className={`absolute left-0 -bottom-1 h-[2px] bg-white transition-all ${
-                      active === i.id ? "w-full" : "w-0 group-hover:w-full"
-                    }`}
-                  />
-                </button>
-              </li>
-            ))}
-            <li>
-              <button className="w-full px-5 py-2 rounded-lg bg-white text-blue-950 font-semibold hover:bg-gray-100 transition shadow">
-                Cotizar
+        <div className="border-t border-white/10 bg-slate-950/95 px-4 py-4 md:hidden">
+          <div className="grid gap-2">
+            {navItems.map((item) => (
+              <button
+                key={item.id}
+                type="button"
+                onClick={() => navigate(item.id)}
+                className={[
+                  "rounded-lg px-4 py-3 text-left text-sm font-semibold",
+                  active === item.id
+                    ? "bg-white/10 text-white"
+                    : "text-slate-300 hover:bg-white/5 hover:text-white",
+                ].join(" ")}
+              >
+                {item.label}
               </button>
-            </li>
-          </ul>
+            ))}
+            <button
+              type="button"
+              onClick={() => navigate("contact")}
+              className="mt-2 rounded-lg bg-cyan-300 px-4 py-3 text-sm font-black text-slate-950"
+            >
+              Cotizar proyecto
+            </button>
+          </div>
         </div>
       )}
     </nav>

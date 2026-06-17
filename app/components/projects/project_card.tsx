@@ -1,137 +1,85 @@
-import React from "react";
+import { ArrowUpRight } from "lucide-react";
+import { motion } from "motion/react";
+import SpotlightCard from "../SpotlightCard";
 
-type CardProps = {
-  title?: React.ReactNode;
-  content?: React.ReactNode;
-  image?: {
-    src: string;
-    alt: string;
-    width?: number;
-    height?: number;
-  };
-  actionButton?: React.ReactNode;
+type ProjectCardProps = {
+  title: string;
+  type: string;
+  description: string;
+  image: string;
+  alt: string;
+  technologies: string[];
   actionHref?: string;
-  onActionClick?: (e: React.MouseEvent) => void;
-  href?: string;
-  className?: string;
+  onActionClick?: (event: React.MouseEvent<HTMLAnchorElement>) => void;
+  isActive?: boolean;
 };
 
-const ProjectCard = ({
+export default function ProjectCard({
   title,
-  content,
+  type,
+  description,
   image,
-  actionButton,
+  alt,
+  technologies,
   actionHref,
   onActionClick,
-  href,
-  className = "",
-}: CardProps) => {
-  const useWrapperLink = Boolean(href) && !Boolean(actionHref);
-  const Wrapper: any = useWrapperLink ? "a" : "div";
+  isActive = false,
+}: ProjectCardProps) {
+  const isExternal = Boolean(actionHref && !actionHref.startsWith("#") && !actionHref.startsWith("/"));
 
   return (
-    <Wrapper
-      {...(useWrapperLink ? { href } : {})}
+    <motion.article
+      whileHover={{ y: -6 }}
+      transition={{ type: "spring", stiffness: 240, damping: 24 }}
       className={[
-        "group relative overflow-hidden rounded-3xl",
-        "bg-gradient-to-b from-slate-900/80 to-slate-900/40",
-        "border border-slate-800/70 backdrop-blur-md",
-        "shadow-[0_10px_30px_rgba(0,0,0,0.35)]",
-        "ring-1 ring-cyan-400/0 hover:ring-cyan-400/20",
-        "transition-all duration-300 ease-out",
-        "focus:outline-none focus-visible:ring-2 focus-visible:ring-cyan-400/60",
-        "hover:-translate-y-1 hover:shadow-cyan-400/10",
-        className,
+        "h-full transition duration-500",
+        isActive ? "opacity-100" : "opacity-100 sm:opacity-35 sm:hover:opacity-80",
       ].join(" ")}
-      style={{ WebkitTapHighlightColor: "transparent" }}
     >
-      <div className="relative">
-        <div className="aspect-[16/9] w-full overflow-hidden">
-          {image ? (
-            <img
-              src={image.src}
-              alt={image.alt || "Imagen del proyecto"}
-              width={image.width}
-              height={image.height}
-              loading="lazy"
-              className="h-full w-full object-cover transition-transform duration-500 ease-out group-hover:scale-[1.03]"
-            />
-          ) : (
-            <div className="h-full w-full bg-slate-800/60" />
-          )}
-        </div>
+      <SpotlightCard className="group relative h-full min-h-[430px] rounded-lg border border-white/10 bg-slate-950 shadow-2xl shadow-black/30 backdrop-blur-xl sm:min-h-[320px]">
+        <img
+          src={image}
+          alt={alt}
+          loading="lazy"
+          className="absolute inset-0 h-full w-full object-cover transition duration-500 group-hover:scale-[1.04]"
+        />
+        <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/55 to-slate-950/5" />
+        <div className="absolute inset-0 bg-slate-950/10" />
 
-        <div className="pointer-events-none absolute inset-0">
-          <div className="absolute inset-0 bg-gradient-to-b from-slate-900/0 via-slate-900/10 to-slate-900/70" />
-          <div className="absolute -inset-x-[20%] -bottom-16 h-32 bg-gradient-to-t from-cyan-400/10 to-transparent blur-2xl transition-opacity duration-300 group-hover:opacity-80 opacity-40" />
-        </div>
-      </div>
-
-      <div className="p-6 md:p-7">
-        {title && (
-          <h3 className="text-xl md:text-2xl font-bold tracking-tight text-white">
-            {title}
-          </h3>
-        )}
-        {content && (
-          <p className="mt-3 text-sm md:text-base leading-relaxed text-slate-300/90">
-            {content}
-          </p>
-        )}
-
-        <div className="mt-6 h-px w-full bg-gradient-to-r from-transparent via-slate-700/60 to-transparent" />
-
-        <div className="mt-5 flex items-center justify-between gap-3">
-          <div className="text-xs text-slate-400">
-            <span className="inline-block align-middle">Listo para explorar</span>
+        <div className="relative z-10 flex h-full flex-col justify-end p-5 sm:p-6">
+          <div className="mb-4 flex flex-wrap gap-2">
+            {technologies.slice(0, 2).map((technology) => (
+              <span
+                key={technology}
+                className="rounded-lg border border-cyan-300/15 bg-cyan-300/10 px-3 py-1.5 text-[11px] font-semibold uppercase text-cyan-100 backdrop-blur"
+              >
+                {technology}
+              </span>
+            ))}
           </div>
 
-          {actionButton &&
-            (actionHref ? (
-              <a
-                href={actionHref}
-                onClick={onActionClick}
-                target={actionHref.startsWith("#") ? undefined : "_blank"}
-                rel={
-                  actionHref.startsWith("#") ? undefined : "noopener noreferrer"
-                }
-                className={[
-                  "inline-flex items-center justify-center",
-                  "rounded-xl border border-cyan-400/40",
-                  "px-4 py-2 text-sm font-semibold",
-                  "text-white",
-                  "bg-slate-900/50",
-                  "shadow-[inset_0_0_0_1px_rgba(0,0,0,0.2)]",
-                  "hover:border-cyan-400/70 hover:shadow-cyan-400/10",
-                  "focus:outline-none focus-visible:ring-2 focus-visible:ring-cyan-400/60",
-                  "transition-all duration-200",
-                ].join(" ")}
-              >
-                {actionButton}
-              </a>
-            ) : (
-              <button
-                type="button"
-                onClick={onActionClick}
-                className={[
-                  "inline-flex items-center justify-center",
-                  "rounded-xl border border-cyan-400/40",
-                  "px-4 py-2 text-sm font-semibold",
-                  "text-white",
-                  "bg-slate-900/50",
-                  "shadow-[inset_0_0_0_1px_rgba(0,0,0,0.2)]",
-                  "hover:border-cyan-400/70 hover:shadow-cyan-400/10",
-                  "focus:outline-none focus-visible:ring-2 focus-visible:ring-cyan-400/60",
-                  "transition-all duration-200",
-                ].join(" ")}
-              >
-                {actionButton}
-              </button>
-            ))}
-        </div>
-      </div>
-    </Wrapper>
-  );
-};
+          <p className="text-xs font-bold uppercase tracking-[0.18em] text-cyan-200">
+            {type}
+          </p>
+          <h3 className="mt-2 text-xl font-black text-white sm:text-2xl">{title}</h3>
+          <p className="mt-3 line-clamp-3 text-sm leading-6 text-slate-300">
+            {description}
+          </p>
 
-export default ProjectCard;
+          <div className="mt-6">
+            <a
+              href={actionHref ?? "#contact"}
+              onClick={onActionClick}
+              target={isExternal ? "_blank" : undefined}
+              rel={isExternal ? "noopener noreferrer" : undefined}
+              className="inline-flex items-center gap-2 rounded-lg border border-white/15 bg-white px-4 py-3 text-sm font-black text-slate-950 transition hover:border-cyan-300/50 hover:bg-cyan-200"
+            >
+              Visitar sitio
+              <ArrowUpRight className="h-4 w-4" />
+            </a>
+          </div>
+        </div>
+      </SpotlightCard>
+    </motion.article>
+  );
+}
